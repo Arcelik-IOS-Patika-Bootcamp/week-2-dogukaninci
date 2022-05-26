@@ -102,10 +102,13 @@ class FirstViewController: UIViewController {
         
         notificationCenterTextField.placeholder = "Notification Center Placeholder"
         notificationCenterTextField.textAlignment = .center
+        notificationCenterTextField.autocorrectionType = .no
         delegateTextField.placeholder = "Delegate Placeholder"
         delegateTextField.textAlignment = .center
+        delegateTextField.autocorrectionType = .no
         closureTextField.placeholder = "Closure Placeholder"
         closureTextField.textAlignment = .center
+        closureTextField.autocorrectionType = .no
         
         sendButton.setTitle("Send", for: .normal)
         
