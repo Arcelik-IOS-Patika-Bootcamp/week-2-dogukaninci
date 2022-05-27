@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol MyDataSendingDelegateProtocol {
+    func sendDataToSecondViewController(myData: String)
+}
+
 class FirstViewController: UIViewController {
     
     private var notificationCenterTextLabel = UILabel()
@@ -18,7 +22,10 @@ class FirstViewController: UIViewController {
     private var sendButton = UIButton(type: .system)
     
     private var sharedConstraints: [NSLayoutConstraint] = []
-
+    
+    //Creates delegate variable for Second View Controller to use
+    var delegate: MyDataSendingDelegateProtocol? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -119,8 +126,12 @@ class FirstViewController: UIViewController {
         closureTextField.layer.borderWidth = 0.5
         closureTextField.layer.cornerRadius = 10
         
-        closureTextField.addTarget(self, action: #selector(self.textFieldDidChange),
-                                  for: .editingChanged)
+        closureTextField.addTarget(self, action: #selector(self.closureTextFieldDidChange),
+                                   for: .editingChanged)
+        delegateTextField.addTarget(self, action: #selector(self.delegateTextFieldDidChange),
+                                    for: .editingChanged)
+        notificationCenterTextField.addTarget(self, action: #selector(self.notificationCenterTextFieldDidChange),
+                                              for: .editingChanged)
         sendButton.addTarget(self, action: #selector(self.sendButtonTapped), for: .touchUpInside)
     }
     
@@ -136,9 +147,18 @@ class FirstViewController: UIViewController {
     
     /// Sets TextField text when input comes
     /// - Parameter sender: UITextField
-    @objc func textFieldDidChange(sender: UITextField) {
+    @objc func closureTextFieldDidChange(sender: UITextField) {
         closureTextField.text = sender.text
-        
+    }
+    /// Sets TextField text when input comes
+    /// - Parameter sender: UITextField
+    @objc func delegateTextFieldDidChange(sender: UITextField) {
+        delegateTextField.text = sender.text
+    }
+    /// Sets TextField text when input comes
+    /// - Parameter sender: UITextField
+    @objc func notificationCenterTextFieldDidChange(sender: UITextField) {
+        notificationCenterTextField.text = sender.text
     }
     /// Makes the transition to SecondViewController
     /// - Parameter sender: UIButton
@@ -149,14 +169,18 @@ class FirstViewController: UIViewController {
         secondVC.completionHandler = { self.closureTextField.text ?? "" }
         
         secondVC.modalPresentationStyle = .fullScreen
+        
+        //Sends data
+        secondVC.sendDataToSecondViewController(myData: delegateTextField.text!)
+        
+        
         // ViewController transition
         self.navigationController?.pushViewController(secondVC, animated: true)
-        
     }
     
     
-
-
+    
+    
 }
 
 

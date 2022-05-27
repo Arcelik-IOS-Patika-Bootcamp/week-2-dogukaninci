@@ -7,14 +7,15 @@
 
 import UIKit
 
-class SecondViewController: UIViewController {
+class SecondViewController: UIViewController, MyDataSendingDelegateProtocol {
+
     private var notificationCenterTextLabel = UILabel()
     private var delegateTextLabel = UILabel()
     private var closureTextLabel = UILabel()
     
     private var sharedConstraints: [NSLayoutConstraint] = []
     
-    //
+    //Completion Variable
     var completionHandler: (() -> String)?
     
     override func viewDidLoad() {
@@ -68,20 +69,27 @@ class SecondViewController: UIViewController {
         
         layoutTrait(traitCollection: traitCollection)
     }
+    
+    // Delegate Method
+    func sendDataToSecondViewController(myData: String) {
+        self.delegateTextLabel.text = "delegate -> \(myData)"
+    }
+    
     private func setViewDetails() {
         view.backgroundColor = .white
-
-        notificationCenterTextLabel.text = "Test"
-        delegateTextLabel.text = "Test"
-        closureTextLabel.text = "Test"
         
         // writes the data returning from the closure to the text
         closureTextLabel.text = "closure -> \(completionHandler!())"
+        
+        //Assigns delegate to self
+        let firstVC = FirstViewController()
+        firstVC.delegate = self
         
     }
     
     @objc func dissmissView(){
         self.dismiss(animated: true, completion: nil)
     }
+    
     
 }
