@@ -66,7 +66,6 @@ class SecondViewController: UIViewController {
         
         
         sharedConstraints.append(contentsOf: [
-            notificationCenterTextLabel.heightAnchor.constraint(equalToConstant: 44),
             notificationCenterTextLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
             notificationCenterTextLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
             notificationCenterTextLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
@@ -81,7 +80,6 @@ class SecondViewController: UIViewController {
             delegateTextField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
             delegateTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
             
-            closureTextLabel.heightAnchor.constraint(equalToConstant: 44),
             closureTextLabel.topAnchor.constraint(equalTo: delegateTextField.bottomAnchor, constant: 10),
             closureTextLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
             closureTextLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20)
