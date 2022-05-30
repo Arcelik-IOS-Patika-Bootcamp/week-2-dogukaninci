@@ -7,11 +7,19 @@
 
 import UIKit
 
-class SecondViewController: UIViewController, MyDataSendingDelegateProtocol {
+/// Delegate Protocol
+protocol MyDataSendingDelegateProtocol: AnyObject {
+    func sendDataToFirstViewController(myData: String)
+}
+
+class SecondViewController: UIViewController {
+    
+    weak var delegate: MyDataSendingDelegateProtocol? = nil
 
     private var notificationCenterTextLabel = UILabel()
     private var delegateTextLabel = UILabel()
     private var closureTextLabel = UILabel()
+    private var delegateTextField = UITextField()
     
     private var sharedConstraints: [NSLayoutConstraint] = []
     
@@ -26,17 +34,23 @@ class SecondViewController: UIViewController, MyDataSendingDelegateProtocol {
         setViewDetails()
         
     }
+    override func viewDidDisappear(_ animated: Bool) {
+        // Pass data to FirstViewController
+        self.delegate?.sendDataToFirstViewController(myData: delegateTextField.text!)
+    }
     /// Adds subviews to the main view controller
     private func addViews() {
         view.addSubview(notificationCenterTextLabel)
         view.addSubview(delegateTextLabel)
         view.addSubview(closureTextLabel)
+        view.addSubview(delegateTextField)
     }
     /// Sets layouts
     private func setupLayout() {
         notificationCenterTextLabel.translatesAutoresizingMaskIntoConstraints = false
         delegateTextLabel.translatesAutoresizingMaskIntoConstraints = false
         closureTextLabel.translatesAutoresizingMaskIntoConstraints = false
+        delegateTextField.translatesAutoresizingMaskIntoConstraints = false
         
         notificationCenterTextLabel.textAlignment = .left
         delegateTextLabel.textAlignment = .left
@@ -54,8 +68,13 @@ class SecondViewController: UIViewController, MyDataSendingDelegateProtocol {
             delegateTextLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
             delegateTextLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
             
+            delegateTextField.heightAnchor.constraint(equalToConstant: 44),
+            delegateTextField.topAnchor.constraint(equalTo: delegateTextLabel.bottomAnchor, constant: 10),
+            delegateTextField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
+            delegateTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
+            
             closureTextLabel.heightAnchor.constraint(equalToConstant: 44),
-            closureTextLabel.topAnchor.constraint(equalTo: delegateTextLabel.bottomAnchor, constant: 10),
+            closureTextLabel.topAnchor.constraint(equalTo: delegateTextField.bottomAnchor, constant: 10),
             closureTextLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
             closureTextLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20)
         ])
@@ -70,26 +89,33 @@ class SecondViewController: UIViewController, MyDataSendingDelegateProtocol {
         layoutTrait(traitCollection: traitCollection)
     }
     
-    // Delegate Method
-    func sendDataToSecondViewController(myData: String) {
-        self.delegateTextLabel.text = "delegate -> \(myData)"
-    }
-    
+
+    /// Set View Details
     private func setViewDetails() {
         view.backgroundColor = .white
+        closureTextLabel.textColor = .red
+        notificationCenterTextLabel.textColor = .red
+        
+        delegateTextField.placeholder = "Delegate Placeholder"
+        delegateTextField.textAlignment = .center
+        delegateTextField.autocorrectionType = .no
+        
+        delegateTextField.layer.borderWidth = 0.5
+        delegateTextField.layer.cornerRadius = 10
+        
+        delegateTextField.addTarget(self, action: #selector(self.delegateTextFieldDidChange),
+                                    for: .editingChanged)
         
         // writes the data returning from the closure to the text
         closureTextLabel.text = "closure -> \(completionHandler!())"
         
-        //Assigns delegate to self
-        let firstVC = FirstViewController()
-        firstVC.delegate = self
-        
     }
     
-    @objc func dissmissView(){
-        self.dismiss(animated: true, completion: nil)
+    /// Sets TextField text when input comes
+    /// - Parameter sender: UITextField
+    @objc func delegateTextFieldDidChange(sender: UITextField) {
+        delegateTextField.text = sender.text
     }
-    
-    
+
 }
+
