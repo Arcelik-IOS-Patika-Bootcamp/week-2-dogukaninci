@@ -34,6 +34,11 @@ class SecondViewController: UIViewController {
         setViewDetails()
         
     }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         // Pass data to FirstViewController
         self.delegate?.sendDataToFirstViewController(myData: delegateTextField.text!)
@@ -55,6 +60,9 @@ class SecondViewController: UIViewController {
         notificationCenterTextLabel.textAlignment = .left
         delegateTextLabel.textAlignment = .left
         closureTextLabel.textAlignment = .left
+        
+        notificationCenterTextLabel.numberOfLines = 0
+        closureTextLabel.numberOfLines = 0
         
         
         sharedConstraints.append(contentsOf: [
@@ -96,6 +104,8 @@ class SecondViewController: UIViewController {
         closureTextLabel.textColor = .red
         notificationCenterTextLabel.textColor = .red
         
+        delegateTextLabel.text = "Delegate Test: "
+        
         delegateTextField.placeholder = "Delegate Placeholder"
         delegateTextField.textAlignment = .center
         delegateTextField.autocorrectionType = .no
@@ -109,12 +119,24 @@ class SecondViewController: UIViewController {
         // writes the data returning from the closure to the text
         closureTextLabel.text = "closure -> \(completionHandler!())"
         
+        // Notification Center observer adding process
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(changeNotificationLabel),
+                                               name: NSNotification.Name("Notification"),
+                                               object: notificationCenterTextLabel.text)
+        
     }
     
     /// Sets TextField text when input comes
     /// - Parameter sender: UITextField
     @objc func delegateTextFieldDidChange(sender: UITextField) {
         delegateTextField.text = sender.text
+    }
+    
+    /// Change Notification Label process done after notification
+    /// - Parameter notification: NSNotification
+    @objc func changeNotificationLabel(notification: NSNotification) {
+        notificationCenterTextLabel.text = "Notification Center Text -> \(notification.object as! String)"
     }
 
 }

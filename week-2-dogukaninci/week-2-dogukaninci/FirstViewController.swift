@@ -157,6 +157,12 @@ class FirstViewController: UIViewController, MyDataSendingDelegateProtocol {
         // Set delegate to self
         secondVC.delegate = self
         
+        //Notification Center, The post proccess must be done after the Second View Controller start listening
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            NotificationCenter.default.post(name: NSNotification.Name("Notification"), object: self.notificationCenterTextField.text)
+        }
+        
+        
         // ViewController transition
         self.navigationController?.pushViewController(secondVC, animated: true)
     }
